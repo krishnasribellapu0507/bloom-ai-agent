@@ -18,18 +18,21 @@ React, TypeScript, TanStack Start, Three.js/WebGL, ThreeUI, Bun, cloud server fu
 - `app/migrations/` — cloud database schema
 - `app/tests/` — automated tests
 - `app/package.json` — dependencies and scripts
-- `source-archive/parts/` — the full project source ZIP split into text chunks for GitHub
-- `scripts/restore_full_project.py` — combines those chunks into the original ZIP
+- `app/packages/` — bundled workspace packages required by the Higgsfield integration
+- `app/public/landing-pages/bloom-studio.html` — immersive ThreeUI-inspired homepage
 
-**To recover the complete source tree:**
+**To clone and inspect the complete source:**
 ```bash
-python3 scripts/restore_full_project.py
-unzip BLOOM_AI_Agent_Source.zip
-cd BLOOM_AI_Agent/app
+git clone https://github.com/krishnasribellapu0507/bloom-ai-agent.git
+cd bloom-ai-agent/app
 bun install
 bun run typecheck
 bun test tests/*.test.ts
 ```
+
+[Download a separate verified source ZIP](https://d2ol7oe51mr4n9.cloudfront.net/user_3K57uTnoF8KBwAkkfcYL4fgCcnz/cbd3caf9-f531-4b95-af60-d28d4e47d6ab.zip).
+
+The original template's `.github/workflows/ci.yml` was omitted because GitHub Actions cannot add another workflow with the current token permissions. This does not affect the application code.
 
 Higgsfield-specific environment bindings and external AI authentication must be configured in the host; no API keys or private runtime secrets are included.
 
