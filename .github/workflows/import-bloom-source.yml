@@ -36,6 +36,8 @@ jobs:
         run: |
           set -euo pipefail
           cp -a /tmp/bloom-import/BLOOM_AI_Agent/. ./
+          # GitHub's action token cannot add a separate CI workflow.
+          rm -f .github/workflows/ci.yml
           git add -A
           git status --short | sed -n '1,30p'
       - name: Commit complete BLOOM source
