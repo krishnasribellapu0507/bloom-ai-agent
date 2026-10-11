@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           cp -a /tmp/bloom-import/BLOOM_AI_Agent/. ./
           git add -A
-          git status --short | head -30
+          git status --short | sed -n '1,30p'
       - name: Commit complete BLOOM source
         shell: bash
         run: |
