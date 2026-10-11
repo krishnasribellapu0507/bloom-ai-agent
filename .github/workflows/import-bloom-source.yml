@@ -1,0 +1,50 @@
+name: Import BLOOM source
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-bloom-source.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-bloom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout new repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download and verify BLOOM source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/bloom-import
+          curl --fail --location --retry 3 --silent --show-error --max-time 120 \
+            'https://d2ol7oe51mr4n9.cloudfront.net/user_3K57uTnoF8KBwAkkfcYL4fgCcnz/cbd3caf9-f531-4b95-af60-d28d4e47d6ab.zip' \
+            -o /tmp/bloom-import/BLOOM_AI_Agent_Source.zip
+          echo 'df3785208c5f65e954949237c2b44442adf3ad210ffa3305fabe754c78a68873  /tmp/bloom-import/BLOOM_AI_Agent_Source.zip' | sha256sum --check -
+          unzip -q /tmp/bloom-import/BLOOM_AI_Agent_Source.zip -d /tmp/bloom-import
+          test -f /tmp/bloom-import/BLOOM_AI_Agent/app/src/routes/agent.tsx
+          test -f /tmp/bloom-import/BLOOM_AI_Agent/app/src/lib/forma-learning.functions.ts
+          test -f /tmp/bloom-import/BLOOM_AI_Agent/app/package.json
+      - name: Copy authentic project files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a /tmp/bloom-import/BLOOM_AI_Agent/. ./
+          git add -A
+          git status --short | head -30
+      - name: Commit complete BLOOM source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add complete BLOOM AI Agent source for TriCity AI Hackathon'
+            git push origin HEAD:main
+          fi
